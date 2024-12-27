@@ -31,7 +31,36 @@ Graph* GraphComputeTransitiveClosure(Graph* g) {
   assert(GraphIsDigraph(g));
   assert(GraphIsWeighted(g) == 0);
 
-  // COMPLETE THE CODE
+  // Número de vértices no grafo original
+  unsigned int numVertices = GraphGetNumVertices(g);
 
-  return NULL;
+  // Criar o grafo para armazenar o fecho transitivo
+  Graph* transitiveClosure = GraphCreate(numVertices, 1, 0); // Digraph, sem pesos
+
+  // Iterar sobre todos os vértices para calcular os vértices alcançáveis
+  for (unsigned int u = 0; u < numVertices; u++) {
+    // Executar Bellman-Ford a partir do vértice `u`
+    GraphBellmanFordAlg* bellmanFordResult = GraphBellmanFordAlgExecute(g, u);
+    if (bellmanFordResult == NULL) {
+      // Ciclo negativo detectado no grafo original
+      printf("Ciclo de peso negativo detectado no grafo original!\n");
+      GraphDestroy(&transitiveClosure);
+      return NULL;
+    }
+
+    // Para cada vértice `v` no grafo, verificar se é alcançável a partir de `u`
+    for (unsigned int v = 0; v < numVertices; v++) {
+      if (u != v && GraphBellmanFordAlgReached(bellmanFordResult, v)) {
+        // Se `v` é alcançável a partir de `u` e não é um loop, adicionar a aresta (u, v)
+        GraphAddEdge(transitiveClosure, u, v);
+      }
+    }
+
+    // Destruir o resultado de Bellman-Ford para liberar memória
+    GraphBellmanFordAlgDestroy(&bellmanFordResult);
+  }
+
+  // Retornar o grafo de fecho transitivo
+  return transitiveClosure;
 }
+

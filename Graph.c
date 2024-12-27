@@ -445,7 +445,7 @@ double *GraphGetDistancesToAdjacents(const Graph *g, unsigned int v)
 //
 unsigned int GraphGetVertexDegree(Graph *g, unsigned int v)
 {
-  //assert(g->isDigraph == 0);
+  assert(g->isDigraph == 0);
   assert(v < g->numVertices);
 
   ListMove(g->verticesList, v);

@@ -1,0 +1,24 @@
+# Ignorar arquivos de objeto (.o)
+*.o
+
+# Ignorar executáveis (qualquer arquivo sem extensão gerado pela compilação)
+*.exe
+*.out
+*.a
+*.so
+
+# Ignorar pastas de build (caso use um sistema de build como Make ou CMake)
+/build/
+
+# Ignorar backups gerados por editores de texto
+*~
+*.swp
+
+# Ignorar arquivos gerados pelo gdb (debugger)
+*.gch
+*.core
+
+# Exceções: garantir que arquivos fonte e Makefile sejam enviados
+!*.c
+!*.h
+!Makefile

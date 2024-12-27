@@ -22,7 +22,7 @@ int main(void) {
   GraphDisplayDOT(dig01);
   printf("\n");
 
-  //GraphCheckInvariants(dig01);
+  GraphCheckInvariants(dig01);
 
   // Bellman-Ford Algorithm
 
@@ -52,7 +52,7 @@ int main(void) {
   GraphDisplayDOT(g01);
   printf("\n");
 
-  //GraphCheckInvariants(g01);
+  GraphCheckInvariants(g01);
 
   // Bellman-Ford Algorithm
 
@@ -75,7 +75,7 @@ int main(void) {
   GraphDisplayDOT(dig03);
   printf("\n");
 
- // GraphCheckInvariants(dig03);
+  GraphCheckInvariants(dig03);
 
   // Bellman-Ford Algorithm
 

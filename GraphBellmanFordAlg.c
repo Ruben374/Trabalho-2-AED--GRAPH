@@ -65,15 +65,23 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
   result->marked[startVertex] = 1;
   result->distance[startVertex] = 0;
 
+  // Verifica o tipo do grafo
+  int isDigraph = GraphIsDigraph(g);
+
   // Algoritmo de Bellman-Ford
   for (unsigned int i = 0; i < numVertices - 1; i++) {
     for (unsigned int u = 0; u < numVertices; u++) {
       // Obter os vértices adjacentes de u
-      unsigned int* adjacents = GraphGetAdjacentsTo(result->graph, u);
-      unsigned int numAdjacents = GraphGetVertexDegree(result->graph, u); // número de adjacentes a u
+      unsigned int* adjacents = GraphGetAdjacentsTo(g, u);
+      unsigned int numAdjacents = isDigraph ? GraphGetVertexOutDegree(g, u) : GraphGetVertexDegree(g, u);
+
+      if (adjacents == NULL || numAdjacents == 0) {
+        continue;
+      }
 
       // Obter as distâncias (pesos) para os adjacentes de u
-      double* distances = GraphGetDistancesToAdjacents(result->graph, u);
+      double* distances = GraphGetDistancesToAdjacents(g, u);
+      assert(distances != NULL);
 
       for (unsigned int j = 0; j < numAdjacents; j++) {
         unsigned int v = adjacents[j];
@@ -92,9 +100,9 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
 
   // Verificação de ciclos negativos
   for (unsigned int u = 0; u < numVertices; u++) {
-    unsigned int* adjacents = GraphGetAdjacentsTo(result->graph, u);
-    unsigned int numAdjacents = GraphGetVertexDegree(result->graph, u); // número de adjacentes a u
-    double* distances = GraphGetDistancesToAdjacents(result->graph, u);
+    unsigned int* adjacents = GraphGetAdjacentsTo(g, u);
+    unsigned int numAdjacents = isDigraph ? GraphGetVertexOutDegree(g, u) : GraphGetVertexDegree(g, u);
+    double* distances = GraphGetDistancesToAdjacents(g, u);
 
     for (unsigned int j = 0; j < numAdjacents; j++) {
       unsigned int v = adjacents[j];
@@ -115,7 +123,6 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
 
   return result;
 }
-
 
 void GraphBellmanFordAlgDestroy(GraphBellmanFordAlg **p)
 {
