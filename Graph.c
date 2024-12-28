@@ -193,31 +193,7 @@ Graph *GraphCreateTranspose(const Graph *g)
             assert(targetVertex != NULL);
 
             // Cria uma nova aresta no grafo transposto
-            struct _Edge *newEdge = (struct _Edge *)malloc(sizeof(struct _Edge));
-            if (newEdge == NULL)
-                abort();
-
-            newEdge->adjVertex = originalVertex->id; // Inverte a direção
-            newEdge->weight = originalEdge->weight;
-
-            // Insere a nova aresta no grafo transposto
-            ListInsert(targetVertex->edgesList, newEdge);
-
-            // Atualiza os graus de entrada e saída
-            targetVertex->outDegree++;
-
-            // Procura o vértice original na lista de vértices do GT
-            if (ListSearch(gT->verticesList, originalVertex) == -1) {
-              printf("Vértice não encontrado");
-              abort();
-            }
-
-            // Vértice onde incide a aresta
-            struct _Vertex *inVertex = (struct _Vertex*) ListGetCurrentItem(gT->verticesList);
-            inVertex->inDegree++;
-
-            // Incrementa o número de arestas no grafo transposto
-            gT->numEdges++;
+            GraphAddEdge(gT, targetVertex->id, originalVertex->id);
 
             // Avança para a próxima aresta
             ListMoveToNext(originalEdgesList);
