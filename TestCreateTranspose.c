@@ -28,7 +28,7 @@ int main(void) {
   // Displaying in DOT format
   GraphDisplayDOT(dig02);
 
-  //GraphCheckInvariants(dig02);
+  GraphCheckInvariants(dig02);
 
   // Reading a directed graph from file
   FILE* file = fopen("DG_2.txt", "r");
@@ -37,7 +37,7 @@ int main(void) {
   // Displaying in DOT format
   GraphDisplayDOT(dig03);
 
-  //GraphCheckInvariants(dig03);
+  GraphCheckInvariants(dig03);
 
   // Create the transpose of dig03
   Graph* dig04 = GraphCreateTranspose(dig03);
@@ -45,7 +45,7 @@ int main(void) {
   // Displaying in DOT format
   GraphDisplayDOT(dig04);
 
-  //GraphCheckInvariants(dig04);
+  GraphCheckInvariants(dig04);
 
   GraphDestroy(&dig01);
   GraphDestroy(&dig02);
