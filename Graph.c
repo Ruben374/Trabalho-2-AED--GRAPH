@@ -174,20 +174,18 @@ Graph *GraphCreateTranspose(const Graph *g)
         List *originalEdgesList = originalVertex->edgesList;
         ListMoveToHead(originalEdgesList);
 
-        for (unsigned int j = 0; j < ListGetSize(originalEdgesList); j++)
+        for (int j = 0; j < ListGetSize(originalEdgesList); j++)
         {
             struct _Edge *originalEdge = ListGetCurrentItem(originalEdgesList);
             assert(originalEdge != NULL);
 
             // Localiza o vértice correspondente no grafo transposto
-            struct _Vertex *targetVertex = NULL;
+            struct _Vertex *targetVertex;
             ListMoveToHead(gT->verticesList);
             for (unsigned int k = 0; k < gT->numVertices; k++)
             {
-                struct _Vertex *currentVertex = ListGetCurrentItem(gT->verticesList);
-                if (currentVertex->id == originalEdge->adjVertex)
-                {
-                    targetVertex = currentVertex;
+                targetVertex = ListGetCurrentItem(gT->verticesList);
+                if (targetVertex->id == originalEdge->adjVertex) {
                     break;
                 }
                 ListMoveToNext(gT->verticesList);
@@ -195,22 +193,7 @@ Graph *GraphCreateTranspose(const Graph *g)
             assert(targetVertex != NULL);
 
             // Cria uma nova aresta no grafo transposto
-            struct _Edge *newEdge = (struct _Edge *)malloc(sizeof(struct _Edge));
-            if (newEdge == NULL)
-                abort();
-
-            newEdge->adjVertex = originalVertex->id; // Inverte a direção
-            newEdge->weight = originalEdge->weight;
-
-            // Insere a nova aresta no grafo transposto
-            ListInsert(targetVertex->edgesList, newEdge);
-
-            // Atualiza os graus de entrada e saída
-            targetVertex->outDegree++;
-            originalVertex->inDegree++;
-
-            // Incrementa o número de arestas no grafo transposto
-            gT->numEdges++;
+            GraphAddEdge(gT, targetVertex->id, originalVertex->id);
 
             // Avança para a próxima aresta
             ListMoveToNext(originalEdgesList);
