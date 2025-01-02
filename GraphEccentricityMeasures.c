@@ -6,10 +6,10 @@
 // GraphEccentricityMeasures
 //
 
-// Student Name :
-// Student Number :
-// Student Name :
-// Student Number :
+// Student Name : Ruben André
+// Student Number : 117592
+// Student Name : Mario Silva
+// Student Number : 110657
 
 /*** COMPLETE THE GraphEccentricityMeasuresCompute FUNCTION ***/
 /*** COMPLETE THE GraphGetCentralVertices FUNCTION ***/

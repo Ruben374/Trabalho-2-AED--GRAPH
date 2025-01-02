@@ -6,10 +6,10 @@
 // GraphBellmanFord - Bellman-Ford Algorithm
 //
 
-// Student Name :
-// Student Number :
-// Student Name :
-// Student Number :
+// Student Name : Ruben André
+// Student Number : 117592
+// Student Name : Mario Silva
+// Student Number : 110657
 
 /*** COMPLETE THE GraphBellmanFordAlgExecute FUNCTION ***/
 
@@ -67,59 +67,45 @@ GraphBellmanFordAlg* GraphBellmanFordAlgExecute(Graph* g, unsigned int startVert
 
   // Verifica o tipo do grafo
   int isDigraph = GraphIsDigraph(g);
+  int start_v_degree = isDigraph ? GraphGetVertexOutDegree(g, startVertex) : GraphGetVertexDegree(g, startVertex);
+  int n_vertices = GraphGetNumVertices(result->graph);
+
+  // Não existe nenhum caminho
+  if (n_vertices == 0 || start_v_degree == 0) {
+    return result;
+  }
+
+  // Implementar uma pilha para percorrer os vértices
+  Stack* vertices = StackCreate(n_vertices); 
+  StackPush(vertices, startVertex);
 
   // Algoritmo de Bellman-Ford
-  for (unsigned int i = 0; i < numVertices - 1; i++) {
-    for (unsigned int u = 0; u < numVertices; u++) {
-      // Obter os vértices adjacentes de u
-      unsigned int* adjacents = GraphGetAdjacentsTo(g, u);
-      unsigned int numAdjacents = isDigraph ? GraphGetVertexOutDegree(g, u) : GraphGetVertexDegree(g, u);
+  while(!StackIsEmpty(vertices)) {
+    // Obter os vértices adjacentes de u
+    unsigned int v = StackPop(vertices);      
+    result->marked[v] = 1;
+    unsigned int* adjacents = GraphGetAdjacentsTo(g, v);
 
-      if (adjacents == NULL || numAdjacents == 0) {
-        continue;
+    if (adjacents == NULL || adjacents[0] == 0) {
+      continue;
+    }
+
+    for (unsigned int i = 1; i <= adjacents[0]; i++) {
+      unsigned int u = adjacents[i];
+      
+      // relaxar as arestas
+      if (result->distance[u] == -1 || result->distance[u] > result->distance[v] + 1) {
+        result->distance[u] = result->distance[v] + 1;
+        result->predecessor[u] = v;
       }
 
-      // Obter as distâncias (pesos) para os adjacentes de u
-      double* distances = GraphGetDistancesToAdjacents(g, u);
-      assert(distances != NULL);
+      if (!result->marked[u])
+        StackPush(vertices, u);
 
-      for (unsigned int j = 0; j < numAdjacents; j++) {
-        unsigned int v = adjacents[j];
-        double weight = distances[j];
-
-        // Relaxamento da aresta (u, v)
-        if (result->distance[u] != -1 && // Se a distância de u for válida
-            (result->distance[v] == -1 || result->distance[u] + weight < result->distance[v])) {
-          result->distance[v] = result->distance[u] + weight;
-          result->predecessor[v] = u;
-          result->marked[v] = 1; // Marcar que v foi alcançado
-        }
-      }
     }
   }
 
-  // Verificação de ciclos negativos
-  for (unsigned int u = 0; u < numVertices; u++) {
-    unsigned int* adjacents = GraphGetAdjacentsTo(g, u);
-    unsigned int numAdjacents = isDigraph ? GraphGetVertexOutDegree(g, u) : GraphGetVertexDegree(g, u);
-    double* distances = GraphGetDistancesToAdjacents(g, u);
-
-    for (unsigned int j = 0; j < numAdjacents; j++) {
-      unsigned int v = adjacents[j];
-      double weight = distances[j];
-
-      if (result->distance[u] != -1 && result->distance[u] + weight < result->distance[v]) {
-        // Ciclo negativo detectado
-        printf("Ciclo de peso negativo detectado!\n");
-        // Liberar recursos e retornar
-        free(result->marked);
-        free(result->distance);
-        free(result->predecessor);
-        free(result);
-        return NULL;
-      }
-    }
-  }
+  StackDestroy(&vertices);
 
   return result;
 }
